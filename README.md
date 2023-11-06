@@ -14,7 +14,7 @@ On this page you can see all controllers CRUD actions:
 6) Delete book (Delete)
 Also you can see some Users actions:
 1) Create user (Post)
-2) Get jbw token (Post)
+2) Get Bearer token (Post)
 3) Authorize 
 4) Check authorization   
 To execute action you need to chose action, press button Try it out then press button Execute.
