@@ -19,7 +19,7 @@ Also you can see some Users actions:
 4) Check authorization   
 To execute action you need to chose action, press button Try it out then press button Execute.
 After you will see server response.
-Bellow all the actions you can see 2 schemas(models):
+Bellow all the actions you can see schemas(models):
 1) Book - this model have all fields from Book table in database.
 2) BookDTO (Book Data Transfer Object) - same as the book model, but not have Id field to prevent the user from changing this field
 (this model is used in Create and Put actions)
