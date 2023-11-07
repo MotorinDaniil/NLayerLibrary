@@ -14,10 +14,10 @@ namespace NLayerLibrary.Web.Controllers
         {
             personService = service;
         }
-        [HttpPost]
-        public PersonDTO Register(PersonDTO personDTO)
+        [HttpPost("/registration")]
+        public PersonDTO Registration(PersonDTO personDTO)
         {
-            return personService.Register(personDTO);
+            return personService.Registration(personDTO);
         }
 
     }

@@ -29,7 +29,7 @@ builder.Services.AddSwaggerGen(swagger =>
     swagger.SwaggerDoc("v1", new OpenApiInfo
     {
         Version = "v1",
-        Title = "JWT Nlayer Library Token Authentication API",
+        Title = "Nlayer Library Token Authentication API",
         Description = "ASP.NET Core Web API"
     });
     // To Enable authorization using Swagger (JWT)

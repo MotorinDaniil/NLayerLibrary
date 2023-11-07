@@ -18,7 +18,7 @@ namespace NLayerLibrary.BLL.Services
         {
             return rep.Login(email,password);
         }
-        public PersonDTO Register(PersonDTO personDTO)
+        public PersonDTO Registration(PersonDTO personDTO)
         {
             var mapper = new MapperConfiguration(cfg => cfg.CreateMap<PersonDTO, Person>()).CreateMapper();
             var mapper1 = new MapperConfiguration(cfg => cfg.CreateMap<Person, PersonDTO>()).CreateMapper();

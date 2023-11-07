@@ -11,7 +11,7 @@ using System.Text;
 
 namespace NLayerLibrary.Web.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/")]
     [ApiController]
     public class AuthController : ControllerBase
     {
@@ -23,8 +23,8 @@ namespace NLayerLibrary.Web.Controllers
             personService = userService;
         }
         [AllowAnonymous]
-        [HttpPost(nameof(Auth))]
-        public IActionResult Auth( string email,string password)
+        [HttpPost(nameof(auth))]
+        public IActionResult auth( string email,string password)
         {
             bool isValid = personService.Login(email,password);
             if (isValid)
@@ -35,8 +35,8 @@ namespace NLayerLibrary.Web.Controllers
             return BadRequest("Please pass the valid Username and Password");
         }
         [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme)]
-        [HttpGet(nameof(GetResult))]
-        public IActionResult GetResult()
+        [HttpGet(nameof(getResult))]
+        public IActionResult getResult()
         {
             return Ok("API Validated");
         }
