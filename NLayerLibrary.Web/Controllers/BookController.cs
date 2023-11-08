@@ -1,13 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using Microsoft.AspNetCore.Mvc;
-using NLayerLibrary.BLL.Interfaces;
+﻿using Microsoft.AspNetCore.Mvc;
 using NLayerLibrary.BLL.DTO;
-using NLayerLibrary.BLL.Infrastructure;
 using NLayerLibrary.BLL.Services;
-using NLayerLibrary.DAL.Entities;
+using NLayerLibrary.WEB;
 
 namespace NLayerLibrary.Web.Controllers
 {
@@ -22,41 +16,52 @@ namespace NLayerLibrary.Web.Controllers
             bookService = service;
         }
 
+
         [HttpGet]
-        public Task<IndexViewModel> GetBook(int page=1,int pagesize=3)
+        public IActionResult GetBooks(int page=1,int pagesize=3)
         {
-            return bookService.GetAll(page,pagesize); 
+            return CheckNull(bookService.GetAll(page, pagesize)); 
         }
 
+
         [HttpGet("get-by-id/{id}")]
-        
-        public Book GetBookById(int id)
+        public IActionResult GetBookById(int id)
         {
-            return bookService.GetById(id);
+            return CheckNull(bookService.GetById(id));
         }
 
         [HttpGet("/get-by-isbn/{ISBN}")]
-        public Book GetByISBN(string ISBN)
+        public IActionResult GetByISBN(string ISBN)
         {
-            return bookService.GetByISBN(ISBN);
+            return CheckNull(bookService.GetByISBN(ISBN));
         }
 
         [HttpPut("{id}")]
-        public Book PutBook(int id,BookDTO bookDTO)
+        [ServiceFilter(typeof(ValidationFilterAttribute))]
+        public IActionResult PutBook(int id,BookDTO bookDTO)
         {
-            return bookService.Update(id, bookDTO);
+            return CheckNull(bookService.Update(id, bookDTO));
         }
 
         [HttpPost]
-        public Book CreateBook(BookDTO bookDTO)
+        [ServiceFilter(typeof(ValidationFilterAttribute))]
+        public IActionResult CreateBook(BookDTO bookDTO)
         {
-            return bookService.Create(bookDTO);
+            return CheckNull(bookService.Create(bookDTO));
         }
 
         [HttpDelete]
-        public Book DeleteBook(int id)
+        public IActionResult DeleteBook(int id)
         {
-            return bookService.Delete(id);
+            return CheckNull(bookService.Delete(id));
+        }
+        private IActionResult CheckNull(object f)
+        {
+            if (f == null)
+            {
+                return NoContent();
+            }
+            return Ok(f);
         }
     }
 }

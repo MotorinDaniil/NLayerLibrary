@@ -1,21 +1,21 @@
 ﻿using NLayerLibrary.DAL.Entities;
 using Microsoft.EntityFrameworkCore;
 using System.Configuration;
-using Microsoft.Extensions.Options;
 
 namespace NLayerLibrary.DAL.EF
 {
-    public class BookContext : DbContext
+    public class LibraryContext : DbContext
     {
-        public BookContext()
+        public LibraryContext()
         {
-           
+            Database.EnsureCreated();
         }
-        public BookContext(DbContextOptions<BookContext> options) : base(options)
+        public LibraryContext(DbContextOptions<LibraryContext> options) : base(options)
         {
             Database.EnsureCreated();
         }
         public DbSet<Book> Book { get; set; }
+        public DbSet<User> Person { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlServer(ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString);

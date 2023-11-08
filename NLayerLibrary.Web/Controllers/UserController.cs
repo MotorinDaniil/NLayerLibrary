@@ -1,62 +1,47 @@
 ﻿using NLayerLibrary.BLL.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
-using Microsoft.IdentityModel.Tokens;
-using System;
-using System.ComponentModel.DataAnnotations;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
+using NLayerLibrary.BLL.DTO;
+using NLayerLibrary.WEB;
 
 namespace NLayerLibrary.Web.Controllers
 {
     [Route("api/")]
     [ApiController]
-    public class AuthController : ControllerBase
+    public class UserController : ControllerBase
     {
         private readonly IConfiguration _configuration;
-        private readonly PersonService personService;
-        public AuthController(IConfiguration configuration, PersonService userService)
+        private readonly UserService userService;
+        public UserController(IConfiguration configuration, UserService Service)
         {
             _configuration = configuration;
-            personService = userService;
+            userService = Service;
         }
+
+        [HttpPost("/registration")]
+        [ServiceFilter(typeof(ValidationFilterAttribute))]
+        public UserDTO Registration(UserDTO personDTO)
+        {
+            return userService.Registration(personDTO);
+        }
+
         [AllowAnonymous]
         [HttpPost(nameof(auth))]
         public IActionResult auth( string email,string password)
         {
-            bool isValid = personService.Login(email,password);
-            if (isValid)
+            string token = userService.GetToken(email, password);
+            if (token == null)
             {
-                var tokenString = GenerateJwtToken(email);
-                return Ok(new { Token = tokenString, Message = "Success" });
+                return BadRequest("Please pass the valid Username and Password");
             }
-            return BadRequest("Please pass the valid Username and Password");
+            return Ok(new { Token = token, Message = "Success" });
         }
+
         [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme)]
         [HttpGet(nameof(getResult))]
         public IActionResult getResult()
         {
             return Ok("API Validated");
         }
-
-
-        private string GenerateJwtToken(string email)
-        {
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(_configuration["Jwt:key"]);
-            var tokenDescriptor = new SecurityTokenDescriptor
-            {
-                Subject = new ClaimsIdentity(new[] { new Claim("email", email) }),
-                Expires = DateTime.UtcNow.AddHours(1),
-                Issuer = _configuration["Jwt:Issuer"],
-                Audience = _configuration["Jwt:Audience"],
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
-            };
-            var token = tokenHandler.CreateToken(tokenDescriptor);
-            return tokenHandler.WriteToken(token);
-        }
-
     }
 }
